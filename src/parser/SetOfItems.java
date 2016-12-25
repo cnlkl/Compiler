@@ -72,6 +72,20 @@ public class SetOfItems {
 
 						}
 					}
+					//TODO 测试跳过可推出空的非终结符
+//					for(int j = item.getmPointPosition();j < item.getmRight().length();j++){
+//						if(s.charAt(0) == item.getmRight().charAt(j)){
+//							String[] temp = s.split(":");
+//							List<Character> firstS = item.firstS();
+//							Item itemTemp = new Item(temp[0].charAt(0), temp[1], 0, firstS);
+//							if(!isInItems(itemTemp)){
+//								mItems.add(itemTemp);
+//							}
+//							if(!grammer.isInList(grammer.getmNullAbleList(), item.getmRight().charAt(j))){
+//								break;
+//							}
+//						}
+//					}
 				}
 			}
 		}
