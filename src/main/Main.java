@@ -16,17 +16,12 @@ public class Main {
 //        String grammer = "S:E,E:CC,C:cC|d";
 //        String grammer = "S:E,E:E+T|T,T:F|T*F,F:(E)|i" ;
 //        String grammer = "S:Z,Z:XYZ|d,Y:c|#,X:Y|a";
-
         String grammer = "P:B," +
                 "B:{DS}," +
                 "D:DA|#," +
-//                "D:AX," +
-//                "X:AX|#," +
                 "A:Ti;," +
                 "T:T[m]|b," +
                 "S:SC|#," +
-//                "S:CY," +
-//                "Y:CY|#" +
                 "C:L=G;|f(G)C|f(G)CsC|w(G)C|dCw(G);|k;|B,"+
                 "L:L[G]|i," +
                 "G:GoJ|J," +
