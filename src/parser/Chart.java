@@ -76,7 +76,24 @@ public class Chart {
 							next.setInAllStatus(true);
 						}
 						if (mGrammer.isInList(mGrammer.getmTerminals(), c)) {
-							mChart.put(currentSet.getmTag() + c.toString(), "s" + next.getmTag());
+							//状态3的前看符号集合
+							String firstR3 = "#fwdk{i}b";
+							//状态8的前看符号集合
+							String firstR8 = "fwdk{i}";
+							//如果下一状态为3或者5则说明本项集合里面有推出空的产生式，直接归约。
+							if(next.getmTag() == 3){
+								for(int k = 0;k < firstR3.length();k++){
+									Character character = firstR3.charAt(k);
+									mChart.put(currentSet.getmTag() + character.toString(), "r" + 3);
+								}
+							}else if(next.getmTag() == 5){
+								for(int k = 0;k < firstR8.length();k++){
+									Character character = firstR8.charAt(k);
+									mChart.put(currentSet.getmTag() + character.toString(), "r" + 8);
+								}
+							}else{
+								mChart.put(currentSet.getmTag() + c.toString(), "s" + next.getmTag());
+							}
 						} else {
 							mChart.put(currentSet.getmTag() + c.toString(), "g" + next.getmTag());
 						}

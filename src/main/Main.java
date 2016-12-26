@@ -14,16 +14,7 @@ public class Main {
 	public static void main(String[] args) throws IOException, CloneNotSupportedException {
 
 //        String grammer = "S:E,E:CC,C:cC|d";
-//        String grammer = "S:E," +
-//
-//                         "E:E+T" +
-//                          "|T," +
-//
-//                         "T:F" +
-//                          "|T*F," +
-//
-//                         "F:(E)" +
-//                          "|i";
+//        String grammer = "S:E,E:E+T|T,T:F|T*F,F:(E)|i" ;
 //        String grammer = "S:Z,Z:XYZ|d,Y:c|#,X:Y|a";
 
         String grammer = "P:B," +

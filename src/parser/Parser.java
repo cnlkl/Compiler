@@ -19,8 +19,6 @@ public class Parser {
     private Chart mChart;
     private HashMap<String, String> mParseChart;
     private List<String> mProduction;
-    ////////////////////
-//    private BufferedReader bufferedReader;
 
     public Parser(Lexer mLexer, Chart chart) {
         this.mLexer = mLexer;
@@ -29,89 +27,46 @@ public class Parser {
         mChart = chart;
         mParseChart = mChart.getmChart();
         mProduction = mChart.getmGrammer().getmProductionRules();
-
-        ////////////////////////////////////////
-//        File file = new File("src\\test.txt");
-//        InputStreamReader inputStreamReader = null;
-//        try {
-//            inputStreamReader = new InputStreamReader(new FileInputStream(file), "utf-8");
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        bufferedReader = new BufferedReader(inputStreamReader);
-        ///////////////////////////////////////
     }
 
     public void parse(){
-        boolean isFirst = true;
         Character token = ' ';
-        Character nextToken = ' ';
-        Character nullToken = ' ';
-        String temp;
+        token = nextToken();
         while (true){
-            if(isFirst){
-                token = nextToken();
-                nextToken = nextToken();
-                isFirst = false;
-            }
-
             if(token == 65535){
                 token = '$';
             }
             String state = mStatusStack.peek();
-            //自动输入串
-            String nullStr = mParseChart.get(state + "#");
             String action = mParseChart.get(state + token.toString());
-            //如果action为null，且当输入为#时可以移进，则将token设置为#
-            temp = action;
-            if(action == null && nullStr != null && nullStr.charAt(0) == 's'){
-                action = nullStr;
-                nullToken = token;
-                token = '#';
-            }
-            if (action == null && nullStr == null){
-//                System.out.print(mStatusStack + "\t");
-//                System.out.print("当前输入:" + token + "\t下个输入:" + nextToken + "\t");
+            if (action == null){
                 System.out.println("error near line: " + Lexer.line);
                 break;
             }
             if(action.charAt(0) == 's'){
-                System.out.print(mStatusStack + "\t");
-                System.out.print("当前输入:" + token + "\t下个输入:" + nextToken + "\t");
-                System.out.println("移入");
+                printStackTokenAction(token, "移入");
                 mStatusStack.push(token.toString());
                 mStatusStack.push(action.substring(1));
-                if(nullStr == null || nullStr.charAt(0) != 's' || temp != null){
-                    token = nextToken;
-                    nextToken = nextToken();
-                }else{
-                    token = nullToken;
-                }
+                token = nextToken();
             }else if(action.charAt(0) == 'r'){
-                if(action.charAt(1) == '0'){
-                    System.out.println("acc");
-                    break;
-                }
                 String production = mProduction.get(Integer.valueOf(action.substring(1)));
-                System.out.print(mStatusStack + "\t");
-                System.out.print("当前输入:" + token + "\t下个输入:" + nextToken + "\t");
-                System.out.println("根据" + production + "归约");
                 int betaSize = production.length() - 2;
-                betaSize *= 2;
-                for(int i = 0;i < betaSize;i++){
-                    mStatusStack.pop();
+                printStackTokenAction(token, "根据" + production + "归约");
+                //如果按产生式3或8归约，由于这两条产生式右部为空所以不需要弹出
+                if(!action.substring(1).equals("3") && !action.substring(1).equals("8")){
+                    for(int i = 0;i < betaSize*2;i++){
+                        mStatusStack.pop();
+                    }
                 }
                 String top = mStatusStack.peek();
                 Character character = production.charAt(0);
                 mStatusStack.push(character.toString());
+                if(action.charAt(1) == '0'){
+                    printStackTokenAction(token, "acc");
+                    break;
+                }
                 mStatusStack.push(mParseChart.get(top + character.toString()).substring(1));
             }
-
         }
-
-
     }
 
     public char nextToken(){
@@ -120,7 +75,6 @@ public class Parser {
         try {
             t = mLexer.scan();
             token = exchange(t);
-//            token = (char) bufferedReader.read();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -190,5 +144,8 @@ public class Parser {
         return result;
     }
 
+    public void printStackTokenAction(Character token, String action){
+        System.out.println(mStatusStack + "\t" + token.toString() + "\t" + action);
+    }
 
 }

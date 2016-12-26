@@ -72,20 +72,6 @@ public class SetOfItems {
 
 						}
 					}
-					//TODO 测试跳过可推出空的非终结符
-//					for(int j = item.getmPointPosition();j < item.getmRight().length();j++){
-//						if(s.charAt(0) == item.getmRight().charAt(j)){
-//							String[] temp = s.split(":");
-//							List<Character> firstS = item.firstS();
-//							Item itemTemp = new Item(temp[0].charAt(0), temp[1], 0, firstS);
-//							if(!isInItems(itemTemp)){
-//								mItems.add(itemTemp);
-//							}
-//							if(!grammer.isInList(grammer.getmNullAbleList(), item.getmRight().charAt(j))){
-//								break;
-//							}
-//						}
-//					}
 				}
 			}
 		}
@@ -95,7 +81,7 @@ public class SetOfItems {
     	Grammer grammer = Grammer.getInstance();
     	//遍历当前项集中的所有项
     	for(Item item : mItems){
-    		if(item.getmPointPosition() == item.getmRight().length()){
+			if(item.getmPointPosition() == item.getmRight().length()){
     			if(grammer.isInList(item.getA(), x)){
     				String itemProduction = item.getmLeft() + ":" + item.getmRight();
     				for(int i = 0;i < grammer.getmProductionRules().size();i++){
