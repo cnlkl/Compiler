@@ -3,6 +3,7 @@ package lexer;
 //变量作为表达式
 public class Id extends Expr {
 	private int offset;
+	private double mValue;
 	
 	
 	/**
@@ -11,9 +12,8 @@ public class Id extends Expr {
 	 * @param type 变量类型
 	 * @param b 变量地址 
 	 */
-	public Id(Word id, Type type, int b) {
+	public Id(Word id, Type type) {
 		super(id, type);
-		offset = b;	
 	}
 
 
@@ -25,5 +25,12 @@ public class Id extends Expr {
 	public void setOffset(int offset) {
 		this.offset = offset;
 	}
-	
+
+	public double getmValue() {
+		return mValue;
+	}
+
+	public void setmValue(double mValue) {
+		this.mValue = mValue;
+	}
 }

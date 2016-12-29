@@ -33,11 +33,11 @@ public class Main {
                 "U:!U|-U|F," +
                 "F:(G)|L|m|r|t|a";
         Chart chart = new Chart(grammer);
-        chart.printAllStatus();
+//        chart.printAllStatus();
         Grammer grammer1 = Grammer.getInstance();
         grammer1.printAllProductionRules();
-        chart.printParseChart();
-        System.out.println();
+//        chart.printParseChart();
+//        System.out.println();
         Parser parser = new Parser(new Lexer(), chart);
         parser.parse();
 	}

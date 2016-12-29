@@ -1,4 +1,7 @@
 {
-        int i;
-        i = i + i;
+        int c;int b;double d;int[100] a;
+        i = i + i * i;
+        {
+            int b;
+        }
 }

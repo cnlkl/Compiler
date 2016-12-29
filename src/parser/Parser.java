@@ -1,8 +1,6 @@
 package parser;
 
-import lexer.Lexer;
-import lexer.Tag;
-import lexer.Token;
+import lexer.*;
 
 import java.io.*;
 import java.util.HashMap;
@@ -15,13 +13,25 @@ import java.util.Stack;
  */
 public class Parser {
     private Lexer mLexer;
+    //符号表
+    private Env mEnv;
+    //符号状态转移栈
     private Stack<String> mStatusStack;
+    //Expr、Id、Op暂存栈
+    private Stack<Expr> mTypeStack;
+    //保存当前token
+    private Token mToken;
+    //保存当前正在声明的类型
+    private Type mType;
+    //保存当前正在声明Id
+    private Token mId;
     private Chart mChart;
     private HashMap<String, String> mParseChart;
     private List<String> mProduction;
 
     public Parser(Lexer mLexer, Chart chart) {
         this.mLexer = mLexer;
+        mEnv = null;
         mStatusStack = new Stack<String>();
         mStatusStack.push("0");
         mChart = chart;
@@ -46,9 +56,13 @@ public class Parser {
                 printStackTokenAction(token, "移入");
                 mStatusStack.push(token.toString());
                 mStatusStack.push(action.substring(1));
+                if(mToken.getTag() == Tag.ID){
+                    mId = mToken;
+                }
                 token = nextToken();
             }else if(action.charAt(0) == 'r'){
                 String production = mProduction.get(Integer.valueOf(action.substring(1)));
+                semantemeAction(Integer.valueOf(action.substring(1)));
                 int betaSize = production.length() - 2;
                 printStackTokenAction(token, "根据" + production + "归约");
                 //如果按产生式3或8归约，由于这两条产生式右部为空所以不需要弹出
@@ -71,10 +85,10 @@ public class Parser {
 
     public char nextToken(){
         char token = ' ';
-        Token t = null;
         try {
-            t = mLexer.scan();
-            token = exchange(t);
+            mToken = mLexer.scan();
+            saveType();
+            token = exchange(mToken);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -136,6 +150,11 @@ public class Parser {
             case Tag.OR:
                 result = 'o';
                 break;
+            case '{':
+                result = '{';
+                //新的块则创建属于该块的符号表
+                mEnv = new Env(mEnv);
+                break;
             default:
                 result = token.toString().charAt(0);
                 break;
@@ -148,4 +167,50 @@ public class Parser {
         System.out.println(mStatusStack + "\t" + token.toString() + "\t" + action);
     }
 
+    //保存当前类型
+    public void saveType(){
+        if(mToken.getTag() == Tag.BASIC){
+            Type typeTemp = (Type) mToken;
+            pushTokenAndState(exchange(mToken));
+            if(mToken.getTag() == '['){
+                pushTokenAndState(exchange(mToken));
+                mType = new Array(((Num)mToken).getValue(), typeTemp);
+                pushTokenAndState(exchange(mToken));
+                pushTokenAndState(exchange(mToken));
+            } else{
+                mType = typeTemp;
+            }
+        }
+    }
+
+    //压入栈，并扫描下一个token
+    private void pushTokenAndState(Character c){
+        String state = mStatusStack.peek();
+        String action = mParseChart.get(state + c);
+        if(action.charAt(0) == 's'){
+            printStackTokenAction(c, "移入");
+            mStatusStack.push(c.toString());
+            mStatusStack.push(action.substring(1));
+            try {
+                mToken = mLexer.scan();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void semantemeAction(int numOfProduction){
+        switch (numOfProduction){
+            case 0:
+                break;
+            case 4:
+                mEnv.put(((Word)mId).getLexeme(), new Id((Word) mId, mType));
+                break;
+            case 6:
+
+                break;
+            default:
+                break;
+        }
+    }
 }
