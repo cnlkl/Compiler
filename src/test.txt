@@ -1,7 +1,5 @@
 {
-        int c;int b;double d;int[100] a;
-        i = i + i * i;
-        {
-            int b;
-        }
+        int i;int c;int b;double d;
+        int[100] a;bool j;char k;bool t;
+        i = i + 1 + 3 * 3 / 2 * 2.1;
 }

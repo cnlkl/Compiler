@@ -1,4 +1,4 @@
-package lexer;
+package inter;
 
 import lexer.Lexer;
 

@@ -1,10 +1,12 @@
-package lexer;
+package inter;
+
+import lexer.Type;
+import lexer.Word;
 
 //变量作为表达式
 public class Id extends Expr {
 	private int offset;
-	private double mValue;
-	
+
 	
 	/**
 	 * 
@@ -26,11 +28,4 @@ public class Id extends Expr {
 		this.offset = offset;
 	}
 
-	public double getmValue() {
-		return mValue;
-	}
-
-	public void setmValue(double mValue) {
-		this.mValue = mValue;
-	}
 }

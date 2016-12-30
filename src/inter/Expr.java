@@ -1,5 +1,8 @@
-package lexer;
+package inter;
 
+
+import lexer.Token;
+import lexer.Type;
 
 public class Expr extends Node {
 	
@@ -60,19 +63,10 @@ public class Expr extends Node {
 	public void jumping(int t, int f) {
 		emitJumps(toString(), t, f);;
 	}
-	
-	
+
 	@Override
 	public String toString() {
 		return op.toString();
 	}
-	
-	
-	
-	
 
-	
-	
-	
-	
 }

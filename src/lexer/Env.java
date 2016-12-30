@@ -1,5 +1,7 @@
 package lexer;
 
+import inter.Id;
+
 import java.util.Hashtable;
 
 public class Env {
@@ -23,5 +25,13 @@ public class Env {
 			}
 		}
 		return null;
+	}
+
+	public Env getPrEnv() {
+		return prEnv;
+	}
+
+	public Hashtable<String, Id> getTable() {
+		return table;
 	}
 }

@@ -3,6 +3,9 @@ package main;
 import java.io.IOException;
 import java.util.Stack;
 
+import exception.IdentifierExistException;
+import exception.TypeErrorException;
+import exception.UndefinedException;
 import lexer.Lexer;
 import parser.Chart;
 import parser.Grammer;
@@ -11,7 +14,7 @@ import parser.Parser;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException, CloneNotSupportedException {
+	public static void main(String[] args) throws IOException, CloneNotSupportedException, UndefinedException, TypeErrorException, IdentifierExistException {
 
 //        String grammer = "S:E,E:CC,C:cC|d";
 //        String grammer = "S:E,E:E+T|T,T:F|T*F,F:(E)|i" ;
@@ -38,7 +41,7 @@ public class Main {
         grammer1.printAllProductionRules();
 //        chart.printParseChart();
 //        System.out.println();
-        Parser parser = new Parser(new Lexer(), chart);
+        Parser parser = new Parser(new Lexer(), chart, false);
         parser.parse();
 	}
 
