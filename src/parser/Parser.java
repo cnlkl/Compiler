@@ -99,7 +99,7 @@ public class Parser {
         }
     }
 
-    public char nextToken(){
+    public char nextToken() throws TypeErrorException, UndefinedException, IdentifierExistException {
         char token = ' ';
         try {
             mToken = mLexer.scan();
@@ -186,7 +186,7 @@ public class Parser {
     }
 
     //保存当前类型
-    public void saveType(){
+    public void saveType() throws TypeErrorException, UndefinedException, IdentifierExistException {
         if(mToken.getTag() == Tag.BASIC){
             mPreType = mType;
             Type typeTemp = (Type) mToken;
@@ -241,18 +241,37 @@ public class Parser {
         return null;
     }
     //压入栈，并扫描下一个token
-    private void pushTokenAndState(Character c){
-        String state = mStatusStack.peek();
-        String action = mParseChart.get(state + c);
-        if(action.charAt(0) == 's'){
-            printStackTokenAction(c, "移入");
-            mStatusStack.push(c.toString());
-            mStatusStack.push(action.substring(1));
-            save();
-            try {
-                mToken = mLexer.scan();
-            } catch (IOException e) {
-                e.printStackTrace();
+    private void pushTokenAndState(Character c) throws TypeErrorException, UndefinedException, IdentifierExistException {
+        while (true){
+            String state = mStatusStack.peek();
+            String action = mParseChart.get(state + c);
+            if(action.charAt(0) == 's'){
+                printStackTokenAction(c, "移入");
+                mStatusStack.push(c.toString());
+                mStatusStack.push(action.substring(1));
+                save();
+                try {
+                    mToken = mLexer.scan();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }else if(action.charAt(0) == 'r'){
+                String production = mProduction.get(Integer.valueOf(action.substring(1)));
+                semantemeAction(Integer.valueOf(action.substring(1)));
+                int betaSize = production.length() - 2;
+                printStackTokenAction(c, "根据" + production + "归约");
+                //如果按产生式3或8归约，由于这两条产生式右部为空所以不需要弹出
+                if(!action.substring(1).equals("3") && !action.substring(1).equals("8")){
+                    for(int i = 0;i < betaSize*2;i++){
+                        mStatusStack.pop();
+                    }
+                }
+                String top = mStatusStack.peek();
+                Character character = production.charAt(0);
+                mStatusStack.push(character.toString());
+
+                mStatusStack.push(mParseChart.get(top + character.toString()).substring(1));
             }
         }
     }
